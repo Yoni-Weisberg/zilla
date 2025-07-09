@@ -79,6 +79,12 @@
                     {
                         "const": "float"
                     },
+                    "mandatory":
+                    {
+                        "title": "Mandatory",
+                        "type": "boolean",
+                        "default": false
+                    },
                     "format":
                     {
                         "type": "string",

@@ -30,7 +30,7 @@ import jakarta.json.bind.adapter.JsonbAdapter;
 
 public final class ModelConfigAdapter implements JsonbAdapter<ModelConfig, JsonValue>
 {
-    private static final String MODEL_NAME = "model";
+    public static final String MODEL_NAME = "model";
 
     private final Map<String, ModelConfigAdapterSpi> delegatesByName;
     private ModelConfigAdapterSpi delegate;

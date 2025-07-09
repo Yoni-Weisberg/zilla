@@ -45,6 +45,7 @@ public class HttpRequestConfigAdapter implements JsonbAdapter<HttpRequestConfig,
     private static final String QUERY_PARAMS_NAME = "query";
     private static final String CONTENT_NAME = "content";
     private static final String RESPONSES_NAME = "responses";
+    private static final String HEADER_MANDATORY_NAME = "mandatory";
 
     private final ModelConfigAdapter model = new ModelConfigAdapter();
     private final HttpResponseConfigAdapter response = new HttpResponseConfigAdapter();
@@ -74,7 +75,18 @@ public class HttpRequestConfigAdapter implements JsonbAdapter<HttpRequestConfig,
             for (HttpParamConfig header : request.headers)
             {
                 model.adaptType(header.model.model);
-                headers.add(header.name, model.adaptToJson(header.model));
+                JsonValue jsonValue = model.adaptToJson(header.model);
+                boolean isMandatory = header.mandatory;
+                if (isMandatory)
+                {
+                    JsonObjectBuilder headerBuilder = (jsonValue instanceof JsonObject)
+                        ? Json.createObjectBuilder(jsonValue.asJsonObject())
+                        : Json.createObjectBuilder();
+                    headerBuilder.add(ModelConfigAdapter.MODEL_NAME, header.model.model);
+                    headerBuilder.add(HEADER_MANDATORY_NAME, true);
+                    jsonValue = headerBuilder.build();
+                }
+                headers.add(header.name, jsonValue);
             }
             object.add(HEADERS_NAME, headers);
         }
@@ -156,6 +168,8 @@ public class HttpRequestConfigAdapter implements JsonbAdapter<HttpRequestConfig,
             {
                 HttpParamConfig header = HttpParamConfig.builder()
                     .name(entry.getKey())
+                    .mandatory(entry.getValue() instanceof JsonObject &&
+                            entry.getValue().asJsonObject().getBoolean(HEADER_MANDATORY_NAME, false))
                     .model(model.adaptFromJson(entry.getValue()))
                     .build();
                 headers.add(header);

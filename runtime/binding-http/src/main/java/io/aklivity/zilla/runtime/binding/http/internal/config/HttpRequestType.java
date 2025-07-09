@@ -17,6 +17,7 @@ package io.aklivity.zilla.runtime.binding.http.internal.config;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -45,6 +46,7 @@ public final class HttpRequestType
 
     // validators
     public final Map<String8FW, ValidatorHandler> headers;
+    public final Set<String8FW> mandatoryHeaders;
     public final Map<String, ValidatorHandler> pathParams;
     public final Map<String, ValidatorHandler> queryParams;
     public final ModelConfig content;
@@ -53,16 +55,17 @@ public final class HttpRequestType
     public final List<Response> responses;
 
     private HttpRequestType(
-        String path,
-        HttpRequestConfig.Method method,
-        List<String> contentType,
-        Matcher pathMatcher,
-        Matcher queryMatcher,
-        Map<String8FW, ValidatorHandler> headers,
-        Map<String, ValidatorHandler> pathParams,
-        Map<String, ValidatorHandler> queryParams,
-        ModelConfig content,
-        List<Response> responses)
+            String path,
+            HttpRequestConfig.Method method,
+            List<String> contentType,
+            Matcher pathMatcher,
+            Matcher queryMatcher,
+            Map<String8FW, ValidatorHandler> headers,
+            Set<String8FW> mandatoryHeaders,
+            Map<String, ValidatorHandler> pathParams,
+            Map<String, ValidatorHandler> queryParams,
+            ModelConfig content,
+            List<Response> responses)
     {
         this.path = path;
         this.method = method;
@@ -70,6 +73,7 @@ public final class HttpRequestType
         this.pathMatcher = pathMatcher;
         this.queryMatcher = queryMatcher;
         this.headers = headers;
+        this.mandatoryHeaders = mandatoryHeaders;
         this.pathParams = pathParams;
         this.queryParams = queryParams;
         this.content = content;
@@ -111,6 +115,7 @@ public final class HttpRequestType
         private Map<String, ValidatorHandler> queryParams;
         private ModelConfig content;
         private List<Response> responses;
+        private Set<String8FW> mandatoryHeaders;
 
         public Builder path(
             String path)
@@ -137,6 +142,12 @@ public final class HttpRequestType
             Map<String8FW, ValidatorHandler> headers)
         {
             this.headers = headers;
+            return this;
+        }
+
+        public Builder mandatoryHeaders(Set<String8FW> mandatoryHeaders)
+        {
+            this.mandatoryHeaders = mandatoryHeaders;
             return this;
         }
 
@@ -173,8 +184,9 @@ public final class HttpRequestType
             String pathPattern = String.format(PATH_FORMAT, path.replaceAll(PATH_REGEX, PATH_REPLACEMENT));
             Matcher pathMatcher = Pattern.compile(pathPattern).matcher(EMPTY_INPUT);
             Matcher queryMatcher = QUERY_PATTERN.matcher(EMPTY_INPUT);
-            return new HttpRequestType(path, method, contentType, pathMatcher, queryMatcher, headers, pathParams, queryParams,
-                content, responses);
+            return new HttpRequestType(path, method, contentType, pathMatcher, queryMatcher, headers, mandatoryHeaders,
+                    pathParams, queryParams, content, responses);
         }
+
     }
 }

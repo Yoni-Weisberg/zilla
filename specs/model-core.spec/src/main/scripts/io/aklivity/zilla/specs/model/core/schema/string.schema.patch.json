@@ -83,6 +83,12 @@
                     {
                         "const": "string"
                     },
+                    "mandatory":
+                    {
+                        "title": "Mandatory",
+                        "type": "boolean",
+                        "default": false
+                    },
                     "encoding":
                     {
                         "type": "string",

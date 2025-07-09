@@ -502,6 +502,18 @@
                 },
                 {
                     "$ref": "#/$defs/validator/model"
+                },
+                {
+                    "type": "object",
+                    "properties":
+                    {
+                        "mandatory":
+                        {
+                            "type": "boolean",
+                            "default": false
+                        }
+                    },
+                    "additionalProperties": false
                 }
             ],
             "types":

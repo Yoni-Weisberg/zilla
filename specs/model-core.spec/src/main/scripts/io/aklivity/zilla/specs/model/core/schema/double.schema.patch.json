@@ -79,6 +79,12 @@
                     {
                         "const": "double"
                     },
+                    "mandatory":
+                    {
+                        "title": "Mandatory",
+                        "type": "boolean",
+                        "default": false
+                    },
                     "format":
                     {
                         "type": "string",

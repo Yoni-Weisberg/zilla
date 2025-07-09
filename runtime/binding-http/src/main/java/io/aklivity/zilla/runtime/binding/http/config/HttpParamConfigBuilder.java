@@ -25,6 +25,7 @@ public class HttpParamConfigBuilder<T> extends ConfigBuilder<T, HttpParamConfigB
     private final Function<HttpParamConfig, T> mapper;
 
     private String name;
+    private boolean mandatory = false;
     private ModelConfig model;
 
     HttpParamConfigBuilder(
@@ -47,6 +48,13 @@ public class HttpParamConfigBuilder<T> extends ConfigBuilder<T, HttpParamConfigB
         return this;
     }
 
+    public HttpParamConfigBuilder<T> mandatory(
+        boolean isMandatory)
+    {
+        this.mandatory = isMandatory;
+        return this;
+    }
+
     public HttpParamConfigBuilder<T> model(
         ModelConfig model)
     {
@@ -63,6 +71,6 @@ public class HttpParamConfigBuilder<T> extends ConfigBuilder<T, HttpParamConfigB
     @Override
     public T build()
     {
-        return mapper.apply(new HttpParamConfig(name, model));
+        return mapper.apply(new HttpParamConfig(name, mandatory, model));
     }
 }

@@ -20,9 +20,11 @@ import static java.util.EnumSet.allOf;
 import static java.util.stream.Collectors.toList;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
@@ -196,11 +198,20 @@ public final class HttpBindingConfig
             for (HttpRequestConfig request : this.options.requests)
             {
                 Map<String8FW, ValidatorHandler> headers = new HashMap<>();
+                Set<String8FW> mandatoryHeaders = new HashSet<>();
                 if (request.headers != null)
                 {
                     for (HttpParamConfig header : request.headers)
                     {
-                        headers.put(new String8FW(header.name), supplyValidator.apply(header.model));
+                        String8FW headerName = new String8FW(header.name);
+                        if (header.model != null)
+                        {
+                            headers.put(headerName, supplyValidator.apply(header.model));
+                        }
+                        if (header.mandatory)
+                        {
+                            mandatoryHeaders.add(headerName);
+                        }
                     }
                 }
 
@@ -250,6 +261,7 @@ public final class HttpBindingConfig
                     .method(request.method)
                     .contentType(request.contentType)
                     .headers(headers)
+                    .mandatoryHeaders(mandatoryHeaders)
                     .pathParams(pathParams)
                     .queryParams(queryParams)
                     .content(request.content)

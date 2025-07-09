@@ -3253,22 +3253,30 @@ public final class HttpServerFactory implements HttpStreamFactory
                 HttpBeginExFW beginEx)
             {
                 MutableBoolean valid = new MutableBoolean(true);
-                if (requestType != null && requestType.headers != null)
+                if (requestType != null)
                 {
-                    beginEx.headers().forEach(header ->
+                    if (requestType.mandatoryHeaders != null)
                     {
-                        if (valid.value)
+                        requestType.mandatoryHeaders.forEach(header ->
+                                valid.value &= beginEx.headers().anyMatch(h -> h.name().equals(header)));
+                    }
+                    if (requestType.headers != null)
+                    {
+                        beginEx.headers().forEach(header ->
                         {
-                            ValidatorHandler validator = requestType.headers.get(header.name());
-                            if (validator != null)
+                            if (valid.value)
                             {
-                                String16FW value = header.value();
-                                valid.value &=
-                                    validator.validate(traceId, routedId, value.value(),
-                                        0, value.length(), ValueConsumer.NOP);
+                                ValidatorHandler validator = requestType.headers.get(header.name());
+                                if (validator != null)
+                                {
+                                    String16FW value = header.value();
+                                    valid.value &=
+                                            validator.validate(traceId, routedId, value.value(),
+                                                    0, value.length(), ValueConsumer.NOP);
+                                }
                             }
-                        }
-                    });
+                        });
+                    }
                 }
                 return valid.value;
             }
@@ -6397,22 +6405,30 @@ public final class HttpServerFactory implements HttpStreamFactory
                 HttpBeginExFW beginEx)
             {
                 MutableBoolean valid = new MutableBoolean(true);
-                if (requestType != null && requestType.headers != null)
+                if (requestType != null)
                 {
-                    beginEx.headers().forEach(header ->
+                    if (requestType.mandatoryHeaders != null)
                     {
-                        if (valid.value)
+                        requestType.mandatoryHeaders.forEach(header ->
+                                valid.value &= beginEx.headers().anyMatch(h -> h.name().equals(header)));
+                    }
+                    if (requestType.headers != null)
+                    {
+                        beginEx.headers().forEach(header ->
                         {
-                            ValidatorHandler validator = requestType.headers.get(header.name());
-                            if (validator != null)
+                            if (valid.value)
                             {
-                                String16FW value = header.value();
-                                valid.value &=
-                                    validator.validate(traceId, routedId, value.value(), 0, value.length(),
-                                        ValueConsumer.NOP);
+                                ValidatorHandler validator = requestType.headers.get(header.name());
+                                if (validator != null)
+                                {
+                                    String16FW value = header.value();
+                                    valid.value &=
+                                            validator.validate(traceId, routedId, value.value(), 0, value.length(),
+                                                    ValueConsumer.NOP);
+                                }
                             }
-                        }
-                    });
+                        });
+                    }
                 }
                 return valid.value;
             }

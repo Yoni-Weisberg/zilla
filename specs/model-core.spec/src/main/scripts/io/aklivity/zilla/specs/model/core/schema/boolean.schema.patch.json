@@ -59,6 +59,12 @@
                     "model":
                     {
                         "const": "boolean"
+                    },
+                    "mandatory":
+                    {
+                        "title": "Mandatory",
+                        "type": "boolean",
+                        "default": false
                     }
                 },
                 "additionalProperties": false

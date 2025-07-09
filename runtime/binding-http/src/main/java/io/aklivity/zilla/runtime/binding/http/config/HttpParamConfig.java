@@ -22,13 +22,16 @@ import io.aklivity.zilla.runtime.engine.config.ModelConfig;
 public class HttpParamConfig
 {
     public String name;
+    public boolean mandatory;
     public ModelConfig model;
 
     public HttpParamConfig(
         String name,
+        boolean mandatory,
         ModelConfig model)
     {
         this.name = name;
+        this.mandatory = mandatory;
         this.model = model;
     }
 

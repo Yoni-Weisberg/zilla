@@ -79,6 +79,12 @@
                     {
                         "const": "int32"
                     },
+                    "mandatory":
+                    {
+                        "title": "Mandatory",
+                        "type": "boolean",
+                        "default": false
+                    },
                     "format":
                     {
                         "type": "string",
